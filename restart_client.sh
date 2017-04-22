@@ -1,5 +1,5 @@
 #!/bin/sh
-#===============================================================================
+
 #
 #     FILE:           restart.sh
 #
@@ -12,7 +12,7 @@
 #
 #     DESCRIPTION:    "Führt einen Reboot über Openhab aus und sichert die Meldungen in einem Log"
 #
-#===============================================================================
+#
 
 echo "$(date +"%m-%d-%Y") : reboot : $1" >> /var/log/openhab2/restart.log 2>&1
 SUDO=""
