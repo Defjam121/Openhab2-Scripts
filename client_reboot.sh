@@ -1,16 +1,16 @@
 #!/bin/bash
 #======================================== ==================================
-#     FILE:                                client_reboot.sh
-#     AUTHOR:                        macbook
-#     EMAIL:                             helpi9007@gmail.com
-#     CREATED:                      2017-09-12
+#     FILE:             client_reboot.sh
+#     AUTHOR:           macbook
+#     EMAIL:            helpi9007@gmail.com
+#     CREATED:          2017-10-13
 #
-#     MODIFIED BY:                Defjam
-#     MODIFIED DATE:           2017-10-13
+#     MODIFIED BY:      macbook
+#     MODIFIED DATE:    2017-11-21
 #
-#     DESCRIPTION:               "Client herunterfahren oder restarten. Log mit Datum und IP erstellen"
+#     DESCRIPTION:      "Beschreibung"
 #
-#     VERSION:                        1.0
+#     VERSION:           1.0
 #======================================== ==================================
 ##########################################
 ## Ueberprüfung ob $1 und $2 gegeben sind
