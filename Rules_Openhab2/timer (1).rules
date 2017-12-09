@@ -1,0 +1,46 @@
+import org.eclipse.xtext.xbase.lib.Functions
+import java.util.Map
+
+// We use a Map because the Timer will not have access to change the global var itself
+// but can make a call on the Map if we pass it into the lambda to update the contents.
+// It boils down to the fact that the lambda does not have access to the global vars and vals
+// and requires they be passed and I'm pretty sure they are passed by reference meaning if
+// I assign it to null in the Timer body or the lambda the global var will only change in that
+// context and not for anyone else.
+val Map<String, Timer> timers = newHashMap
+
+val Functions$Function3<ContactItem, Map<String, Timer>, Functions$Function3, Timer> createDoorTimer =
+[door, timers, createDoorTimer |
+    createTimer(now.plusHours(1), [|
+        // Reset the Timer to null
+        timers.put(door.name, null)
+
+        // Recreate the Timer if the Door is still OPEN
+        if(door.state == OPEN) {
+            logWarn("doors", "The " + door.name + " has been open for over an hour!")
+            timers.put(door.name, doorTimer.apply(door, timers, createDoorTimer))
+        }
+    ]
+]
+
+rule "Front Door changed"
+when
+    Item FrontDoor changed
+then
+    if(FrontDoor.state == OPEN) {
+        timers.put(FrontDoor.name, timers, createDoorTimer)
+    }
+    else{
+        if(timers.get(FrontDoor.name) != null) {
+            timers.get(FrontDoor.name).cancel
+            timers.put(FrontDoor.name, null)
+        }
+    }
+end
+
+rule "System started"
+when
+    System started
+then
+    if(FrontDoor.state == OPEN) timers.put(doorTimers.apply(FrontDoor, timers, doorTimer))
+end

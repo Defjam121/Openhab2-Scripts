@@ -1,0 +1,44 @@
+
+/* ITEMS
+Dimmer Light
+Switch CancelDimmer
+*/
+
+var boolean cancelled = false
+
+rule "Set dimmer for evening"
+when
+    Item vTimeOfDay changed
+then
+    val increment = ((100 - brightness)/60).intValue
+    cancelled = false
+
+    // Gradually bring dimmers up to 100 over a period of an hour
+    if(vTimeOfDay.state == "NOON") {
+        while(Light.state as Number < 100 && !cancelled) {
+            val brightness = Light.state as Number + increment
+            if(brightness > 100) brightness = 100
+            Light.sendCommand(brightness)
+            Thread::sleep(60000)
+        }
+    }
+
+    // Gradually bring dimmers down to 0 over a period of an hour
+    else if(vTimeOfDay.state == "NIGHT") {
+        while(Light.state as Number > 0 && !cancelled) {
+            val brightness = Light.state as Number + increment
+            if(brightness < 0) brightness = 0
+            Light.sendCommand(brightness)
+            Thread::sleep(60000)
+        }
+    }
+
+    cancelled = false
+end
+
+rule "Cancel Dimmer Actions"
+when
+    Item CancelDimmer received command
+then
+    cancelled = true
+end

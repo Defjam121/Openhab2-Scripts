@@ -1,0 +1,62 @@
+
+
+import java.text.BreakIterator.BreakIteratorCache
+
+var Number wakeUpDimmer
+var boolean cancelled = false
+var LichtSchlafzimmer = null
+
+// “0 30 10-13 ? * WED,FRI”
+rule "Wakeup Licht Uni starten"
+when
+	Time cron "0 0 5 ? * WED,FRI" or
+	Time cron "0 40 9 ? * TUE,THU" or
+	Time cron "0 40 7 ? * MON" or
+	Item WakeupTest received command ON
+then
+	if((WakeupLicht.state == ON)&&(Holiday.state == OFF)&&(Urlaub.state == OFF)) {
+    	logInfo("WakeUpLicht","Wakeuplicht gestartet")
+    	cancelled = false
+    	LichtSchlafzimmer = DimmerSchlaf.state
+   		wakeUpDimmer=0
+    	while(wakeUpDimmer<100 && !cancelled){
+    		wakeUpDimmer=wakeUpDimmer+5
+    		sendCommand(DimmerSchlaf,wakeUpDimmer)
+    		Thread::sleep(2000) // wait 20 sek
+    }
+		logInfo("WakeUpLicht","Wakeuplicht ist ausgelaufen")
+	}
+	cancelled = false
+	sendCommand(Wecker_Verstaerker, ON)
+end
+
+rule "Stop WakeUp Licht"
+when
+	Item Taster_Schlafzimmer_2_Short changed to ON or
+	Item Taster_Schlafzimmer_1_Short changed to ON
+then
+	if(!cancelled) {
+		cancelled = true
+		logInfo("wakeUpDimmer", "cancelled wurde auf true gesetzt")
+	}
+end
+
+
+rule "Verstärker ein und Lautstärke erhöhen"
+when
+	Item Wecker_Verstaerker received command ON
+then
+	var Number weckerLautstaerke
+	cancelled = false
+	logInfo("Wecker","Verstärker gestartet")
+	sendCommand(Harmony_AC,"PowerON")
+	Thread::sleep(20000) // wait 20 sek
+	weckerLautstaerke = 50
+	while(weckerLautstaerke<90&&!cancelled){
+    		weckerLautstaerke=weckerLautstaerke +5
+    		sendCommand(Yamaha_Volume,weckerLautstaerke)
+    		Thread::sleep(20000) // wait 20 sek
+    		}
+    cancelled = false
+    logInfo("Wecker","Verstärker beendet")
+end
