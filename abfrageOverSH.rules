@@ -1,0 +1,17 @@
+rule "Mülltermine"
+when
+  Item vTrashRead changed to ON  
+then  
+  iTrashRaw_Trigger.sendCommand("brown")
+  Thread::sleep(5000)
+  if (iTrashRaw_Result.state == 0) {
+    iTrashBrown.sendCommand(new DateTimeType(iTrashRaw.state.toString+"T00:00:00"))
+  }
+  Thread::sleep(1000)
+  iTrashRaw_Trigger.sendCommand("yellow")
+  Thread::sleep(5000)
+  if (iTrashRaw_Result.state == 0) {
+    iTrashYellow.sendCommand(new DateTimeType(iTrashRaw.state.toString+"T00:00:00"))
+  }
+  vTrashRead.postUpdate(OFF)
+end

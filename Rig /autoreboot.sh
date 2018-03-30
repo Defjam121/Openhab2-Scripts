@@ -24,6 +24,13 @@ if [ "$?" != 0 ] ; then
         exit 1;
 fi
 
+#Pruefen, ob autoreboot vorhanden ist
+/usr/bin/ssh -i /scripts/.ssh/id_rsa root@192.168.2.$1 "show stats | grep autorebooted:"
+if [ "$?" != 0 ] ; then
+        echo "0"
+        exit 1;
+fi
+
 # Wert des Sensors auslesen
 INPUT=$(/usr/bin/ssh -i /scripts/.ssh/id_rsa root@192.168.2.$1 "show stats | grep autorebooted:| tr -s ' '| cut -d : -f 2")
 

@@ -1,0 +1,8 @@
+// items for exec-binding
+String iTrashRaw "Script Ergebnis [%s]"  { channel="exec:command:trash:output" }
+String iTrashRaw_Trigger "Trigger für Mülltermin [%s]" { channel="exec:command:trash:input" }
+Number iTrashRaw_Result "Script Rückgabewert [%d]"  { channel="exec:command:trash:exit" }
+// items for rule
+DateTime iTrashBrown "Restmüll [%1$td.%1$tm.%1$tY]" 
+DateTime iTrashYellow "Gelbe Tüte [%1$td.%1$tm.%1$tY]"
+Switch vTrashRead "Mülltermine aktualisieren"
