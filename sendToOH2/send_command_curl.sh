@@ -15,7 +15,7 @@
 # -- Variable ------------
 OH_ITEM="$1"
 OH_STATE="$2"
-OH_HOST="192.168.2.18"
+OH_HOST="192.168.2.42"
 OH_PORT="8080"
 OH_BASE_URL="http://${OH_HOST}:${OH_PORT}/rest/items/$OH_ITEM"
 
